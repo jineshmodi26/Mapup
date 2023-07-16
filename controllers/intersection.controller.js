@@ -1,10 +1,12 @@
 const turf = require('@turf/turf')
 const lines = require('../lines/lines.json')
 const getError = require('../utils/dbErrorHandle')
+const logger = require('../logs/logger')
 
 module.exports = {
     intersect: async (req, res) => {
         try {
+            logger.info(`${req.url} - POST`)
             const geojson = req.body.linestring
             if (geojson?.type !== 'LineString' || !Array.isArray(geojson?.coordinates)) {
                 return res.status(500).json({
@@ -34,6 +36,7 @@ module.exports = {
             })
         } catch (error) {
             const errMsg = getError(error)
+            logger.error('intersection.controller : ' + errMsg)
             return res.status(400).json({
                 error: true,
                 message: errMsg.length > 0 ? errMsg : 'Something went wrong.'

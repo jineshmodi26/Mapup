@@ -4,6 +4,7 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const userRouter = require('./routes/user.router')
 const intersectRouter = require('./routes/intersection.router')
+const logger = require('./logs/logger')
 
 require('dotenv').config()
 
@@ -21,6 +22,7 @@ app.use('/api/v1/user', userRouter)
 app.use('/api/v1/intersection', intersectRouter)
 
 app.use((req, res, next) => {
+    logger.info(`${req.url} - Not Found`)
     res.status(404).send(
         '<h1>Page not found on the server</h1>')
 })

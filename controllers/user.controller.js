@@ -1,9 +1,10 @@
 const User = require('../models/User')
 const getError = require('../utils/dbErrorHandle')
-const logger = require("../logs/logger")
+const logger = require('../logs/logger')
 
 module.exports = {
     signup: async (req, res) => {
+        logger.info(`${req.url} - POST`)
         try {
             const { email, password } = req.body
             const user = User({
@@ -18,6 +19,7 @@ module.exports = {
             })
         } catch (error) {
             const errMsg = getError(error)
+            logger.error('user.controller : ' + errMsg)
             return res.status(400).json({
                 error: true,
                 message: errMsg.length > 0 ? errMsg : 'Could not create user.'
@@ -25,7 +27,7 @@ module.exports = {
         }
     },
     login: async (req, res) => {
-        logger.info('/login - POST');
+        logger.info('/login - POST')
         try {
             const { email, password } = req.body
             const user = await User.findByCredentials(email, password)
